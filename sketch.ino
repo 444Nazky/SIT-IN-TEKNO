@@ -1,7 +1,7 @@
 // Pin Definitions
 const int CONVEYOR_MOTOR_PIN = 3;        // PWM pin for conveyor motor
 const int COLOR_SENSOR_S0 = 4;           // Color sensor pins
-const int COLOR_SENSOR_S1 = 5;
+const int COLOR_SENSOR_S1 = 5;           // danis kintil
 const int COLOR_SENSOR_S2 = 6;
 const int COLOR_SENSOR_S3 = 7;
 const int COLOR_SENSOR_OUT = 8;
