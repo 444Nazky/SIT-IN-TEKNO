@@ -1,10 +1,13 @@
-# Pin Configuration
+# Pin Configuration (Arduino Mega)
 
-| Component       | Pn |
-|-----------------|----|
-| conveyor        | D1 |
-| waste_sensor    | D4 |
-| weight          | A0 |
-| ultrasonic_trig | D3 |
-| ultrasonic_echo | D2 |
-| emergency_stop  | D8 |
+| Component | Pin |
+|-----------|-----|
+| conveyor | 22 |
+| waste_sensor | 24 |
+| weight | A0 |
+| ultrasonic_trig | 23 |
+| ultrasonic_echo | 25 |
+| emergency_stop | 26 |
+| esp8266_rx | 10 |
+| esp8266_tx | 11 |
+
