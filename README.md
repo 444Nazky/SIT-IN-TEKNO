@@ -1,3 +1,6 @@
+## Simulation :
+https://www.tinkercad.com/things/jpwSAPOeOHG/editel?returnTo=%2Fdashboard&sharecode=fUyAqQrS5y_9E6Z51sX3TLiKuFIDK8nvYsb_JUKOY_c
+
 ## Voltage:
 
 | Komponen | Voltage | Arus (perkiraan) |
@@ -18,11 +21,7 @@
 | esp8266_rx | 10 |
 | esp8266_tx | 11 |
 
-# Mr. Trash Wheel Robot
-
-## Requirements
-- Water resistant
-- Can float
+---
 
 ## Functions
 1. Pull waste using conveyor
