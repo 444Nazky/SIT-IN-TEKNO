@@ -1,123 +1,117 @@
-      #include <Servo.h>
+  #include <Servo.h>
 
-      #define SERVO_PIN 9 
-      #define CONVEYOR_IN1 2
-      #define CONVEYOR_IN2 3
-      #define CONVEYOR_EN  4 
-      #define SORTER_IN3 5
-      #define SORTER_IN4 6
-      #define SORTER_EN  7 
+  // Pin dari pin-config.md
+  #define SERVO_PIN 9 
 
-      Servo sortirGate;  
-      #define GATE_METAL 45      
-      #define GATE_PLASTIC 135   
-      #define GATE_TENGAH 90     
+  // Conveyor (DC Motor) - pin 22
+  // NOTE: Pin 22 BUKAN PWM, jadi hanya bisa ON/OFF (kecepatan penuh)
+  #define CONVEYOR_IN1 22  // Arah motor conveyor
+  #define CONVEYOR_IN2 23  // Arah motor conveyor
 
-      void setup() {
-        Serial.begin(9600);
-        
-        Serial.println("=== START SETUP ===");
-        
-        sortirGate.attach(SERVO_PIN);
-        sortirGate.write(GATE_TENGAH);
-        Serial.println("✓ Servo Setup");
-        delay(500);
-        
-        pinMode(CONVEYOR_IN1, OUTPUT);
-        pinMode(CONVEYOR_IN2, OUTPUT);
-        pinMode(CONVEYOR_EN, OUTPUT);
-        Serial.println("✓ Pin Setup - Conveyor");
-        
-        pinMode(SORTER_IN3, OUTPUT);
-        pinMode(SORTER_IN4, OUTPUT);
-        pinMode(SORTER_EN, OUTPUT);
-        Serial.println("✓ Pin Setup - Sorter");
-        
-        conveyor_stop();
-        sorter_stop();
-        Serial.println("✓ Motor Setup");
-        
-        Serial.println("=== SETUP COMPLETE ===");
-        Serial.println("Smart Trash Wheel Ready!");
-        delay(2000);
-      }
+  // Sorter (DC Motor) - tidak ada di pin-config, gunakan default
+  #define SORTER_IN3 24
+  #define SORTER_IN4 25
 
-      void conveyor_jalan(int speed) {
-        digitalWrite(CONVEYOR_IN1, HIGH);
-        digitalWrite(CONVEYOR_IN2, LOW);
-        analogWrite(CONVEYOR_EN, speed);
-      }
+  Servo sortirGate;  
+  #define GATE_METAL 45      
+  #define GATE_PLASTIC 135   
+  #define GATE_TENGAH 90     
 
-      void conveyor_stop() {
-        digitalWrite(CONVEYOR_IN1, LOW);
-        digitalWrite(CONVEYOR_IN2, LOW);
-        analogWrite(CONVEYOR_EN, 0);
-      }
+  void setup() {
+    Serial.begin(9600);
+    
+    Serial.println("=== START SETUP ===");
+    
+    sortirGate.attach(SERVO_PIN);
+    sortirGate.write(GATE_TENGAH);
+    Serial.println("✓ Servo Setup");
+    delay(500);
+    
+    // Conveyor pins
+    pinMode(CONVEYOR_IN1, OUTPUT);
+    pinMode(CONVEYOR_IN2, OUTPUT);
+    Serial.println("✓ Pin Setup - Conveyor (Pin 22-23)");
+    
+    // Sorter pins
+    pinMode(SORTER_IN3, OUTPUT);
+    pinMode(SORTER_IN4, OUTPUT);
+    Serial.println("✓ Pin Setup - Sorter (Pin 24-25)");
+    
+    conveyor_stop();
+    sorter_stop();
+    Serial.println("✓ Motor Setup");
+    
+    Serial.println("=== SETUP COMPLETE ===");
+    Serial.println("Smart Trash Wheel Ready!");
+    delay(2000);
+  }
 
-      void sorter_jalan(int speed) {
-        digitalWrite(SORTER_IN3, HIGH);
-        digitalWrite(SORTER_IN4, LOW);
-        analogWrite(SORTER_EN, speed);
-      }
+  // ===== CONVEYOR MOTOR (DC Motor) =====
+  void conveyor_jalan(int speed) {
+    // Pin 22-23 bukan PWM, jadi kecepatan selalu penuh
+    // speed parameter diabaikan
+    digitalWrite(CONVEYOR_IN1, HIGH);
+    digitalWrite(CONVEYOR_IN2, LOW);
+    Serial.println("→ Conveyor ON");
+  }
 
-      void sorter_stop() {
-        digitalWrite(SORTER_IN3, LOW);
-        digitalWrite(SORTER_IN4, LOW);
-        analogWrite(SORTER_EN, 0);
-      }
+  void conveyor_stop() {
+    digitalWrite(CONVEYOR_IN1, LOW);
+    digitalWrite(CONVEYOR_IN2, LOW);
+    Serial.println("← Conveyor OFF");
+  }
 
-    void sortir_ke_metal() {
-      Serial.println("→ Sortir ke BOX 1 (METAL)");
+  // ===== SORTER MOTOR (DC Motor) =====
+  void sorter_jalan(int speed) {
+    // Pin 24-25 bukan PWM, jadi kecepatan selalu penuh
+    digitalWrite(SORTER_IN3, HIGH);
+    digitalWrite(SORTER_IN4, LOW);
+    Serial.println("→ Sorter ON");
+  }
+
+  void sorter_stop() {
+    digitalWrite(SORTER_IN3, LOW);
+    digitalWrite(SORTER_IN4, LOW);
+    Serial.println("← Sorter OFF");
+  }
+
+  void loop() {
+    // === MAIN LOOP === Tanpa jeda - servo berputar terus
+    
+    while(true) {
+      // Metal → Tengah
+      Serial.println("SERVO → METAL");
       sortirGate.write(GATE_METAL);
       delay(50);
       
+      Serial.println("Sorter ON");
       sorter_jalan(255);
       delay(500);
       sorter_stop();
       
-      sortirGate.write(GATE_TENGAH); 
+      Serial.println("SERVO → TENGAH");
+      sortirGate.write(GATE_TENGAH);
       delay(50);
-    }
-
-    void sortir_ke_plastic() {
-      Serial.println("→ Sortir ke BOX 2");
+      
+      // Tengah → Plastic
+      Serial.println("SERVO → PLASTIC");
       sortirGate.write(GATE_PLASTIC);
       delay(50);
       
-      sorter_jalan(255);  
+      Serial.println("Sorter ON");
+      sorter_jalan(255);
       delay(500);
       sorter_stop();
       
-      sortirGate.write(GATE_TENGAH);  
+      Serial.println("SERVO → TENGAH");
+      sortirGate.write(GATE_TENGAH);
       delay(50);
+      
+      // Conveyor jalan
+      Serial.println("Conveyor ON");
+      conveyor_jalan(255);
+      delay(2000);
+      conveyor_stop();
     }
-
-void loop() {
-  // === MAIN LOOP === Tanpa jeda - servo berputar terus
-  
-  // Servo bergerak terus-menerus
-  while(true) {
-    // Metal → Tengah
-    sortirGate.write(GATE_METAL);
-    delay(50);
-    sorter_jalan(255);
-    delay(500);
-    sorter_stop();
-    sortirGate.write(GATE_TENGAH);
-    delay(50);
-    
-    // Tengah → Plastic
-    sortirGate.write(GATE_PLASTIC);
-    delay(50);
-    sorter_jalan(255);
-    delay(500);
-    sorter_stop();
-    sortirGate.write(GATE_TENGAH);
-    delay(50);
-    
-    // Conveyor jalan
-    conveyor_jalan(255);
-    delay(2000);
-    conveyor_stop();
   }
-}
+
