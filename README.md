@@ -1,3 +1,23 @@
+## Voltage:
+
+| Komponen | Voltage | Arus (perkiraan) |
+|----------|---------|------------------|
+| Servo SG90 | 5V-6V | 100-250mA |
+| Gearbox DC | 6V-12V | 200-500mA per motor |
+
+## Pin Configuration
+
+| Component | Pin |
+|-----------|-----|
+| conveyor | 22 |
+| waste_sensor | 24 |
+| weight | A0 |
+| ultrasonic_trig | 23 |
+| ultrasonic_echo | 25 |
+| emergency_stop | 26 |
+| esp8266_rx | 10 |
+| esp8266_tx | 11 |
+
 # Mr. Trash Wheel Robot
 
 ## Requirements
@@ -52,5 +72,5 @@ e → "EMERGENCY STOP"
 ## Files
 - `sketch_esp8266_wifi.ino` - Main code (NodeMCU ESP8266)
 - `sketch_esp8266.ino` - Basic version
-- `pin.md` - Pin configuration
+- `TODO.md` - Pin configuration
 
